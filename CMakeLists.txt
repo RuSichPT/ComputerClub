@@ -6,4 +6,4 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 add_executable(ComputerClub
-        src/main.cpp)
+        src/main.cpp src/FileParser/FileParser.cpp src/FileParser/FileParser.h)
