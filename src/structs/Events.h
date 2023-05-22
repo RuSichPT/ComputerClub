@@ -3,12 +3,13 @@
 
 #include <string>
 #include <ostream>
-#include "EventType.h"
+#include "../enums/EventType.h"
+#include "Time.h"
 
 using namespace std;
 
 struct Event {
-    string time;
+    Time time;
     EventType type;
     string body;
 

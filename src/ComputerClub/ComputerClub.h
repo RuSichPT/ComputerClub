@@ -6,7 +6,7 @@
 #include <ctime>
 #include "../FileParser/FileParser.h"
 #include "../EventsHandler/EventsHandler.h"
-#include "../Event/Events.h"
+#include "../structs/Events.h"
 
 using namespace std;
 
@@ -17,9 +17,9 @@ public:
 
 private:
     int numTables{};
-    tm start{};
-    tm end{};
     int hourlyCost{};
+    Time start;
+    Time end;
     vector<Event> events;
     unique_ptr<FileParser> parser;
     unique_ptr<EventsHandler> handler;

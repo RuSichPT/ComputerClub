@@ -13,4 +13,5 @@ add_executable(ComputerClub
         src/ComputerClub/ComputerClub.h
         src/EventsHandler/EventsHandler.cpp
         src/EventsHandler/EventsHandler.h
-        src/Event/Events.h src/Event/EventType.h)
+        src/structs/Events.h src/enums/EventType.h
+        src/structs/Time.h)

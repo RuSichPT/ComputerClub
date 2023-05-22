@@ -2,7 +2,7 @@
 #define COMPUTERCLUB_EVENTSHANDLER_H
 
 #include <vector>
-#include "../Event/Events.h"
+#include "../structs/Events.h"
 #include <iostream>
 
 using namespace std;
