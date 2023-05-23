@@ -2,13 +2,14 @@
 #define COMPUTERCLUB_EVENTTYPE_H
 
 enum class EventType{
-    COME = 1,
+    NONE,
+    COME,
     SIT,
     WAIT,
     LEAVE,
-//    LEAVE = 11,
-//    SAT,
-//    ERROR,
+    END_DAY_OR_LEAVE = 11,
+    QUEUE,
+    ERROR,
 
 };
 #endif //COMPUTERCLUB_EVENTTYPE_H
