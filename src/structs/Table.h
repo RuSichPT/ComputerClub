@@ -20,10 +20,16 @@ struct Table {
         start = start1;
     }
 
-    void release(const Time &end) {
+    void release(const Time &end, int price) {
         isBusy = false;
         client = "";
-        duration = duration + (end - start);
+        Time difference = end - start;
+        duration = duration + difference;
+        int hours = difference.hour;
+        if (difference.min > 0){
+            hours++;
+        }
+        profit += price * hours;
     }
 };
 

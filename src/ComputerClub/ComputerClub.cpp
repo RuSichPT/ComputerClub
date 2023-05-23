@@ -44,7 +44,7 @@ void ComputerClub::open() {
     for (auto &table: tables) {
         if (table.isBusy) {
             generateEvent(end, EventType::END_DAY_OR_LEAVE, table.client);
-            table.release(end);
+            table.release(end, hourlyCost);
         }
     }
     cout << end << endl;
@@ -136,10 +136,10 @@ void ComputerClub::handleLeave(const Event &event) {
     if (!queue.empty()) {
         string client = queue.front();
         queue.pop();
-        iTable->release(event.time);
+        iTable->release(event.time, hourlyCost);
         iTable->take(client,event.time);
         generateEvent(event.time, EventType::QUEUE, client + " " + to_string(iTable->number));
     } else {
-        iTable->release(event.time);
+        iTable->release(event.time, hourlyCost);
     }
 }
