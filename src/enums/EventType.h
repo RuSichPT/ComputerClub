@@ -1,7 +1,7 @@
 #ifndef COMPUTERCLUB_EVENTTYPE_H
 #define COMPUTERCLUB_EVENTTYPE_H
 
-enum class EventType{
+enum class EventType {
     NONE,
     COME,
     SIT,

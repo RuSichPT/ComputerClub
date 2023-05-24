@@ -26,7 +26,7 @@ struct Table {
         Time difference = end - start;
         duration = duration + difference;
         int hours = difference.hour;
-        if (difference.min > 0){
+        if (difference.min > 0) {
             hours++;
         }
         profit += price * hours;

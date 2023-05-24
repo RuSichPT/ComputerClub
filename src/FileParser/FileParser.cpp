@@ -23,7 +23,7 @@ const vector<string> &FileParser::getStrings() const {
     return strings;
 }
 
-void FileParser::split(const string &str, char delim, vector<string> &out)  {
+void FileParser::split(const string &str, char delim, vector<string> &out) {
     stringstream ss(str);
     string s;
     while (getline(ss, s, delim)) {

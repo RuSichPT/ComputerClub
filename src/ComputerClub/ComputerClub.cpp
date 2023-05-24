@@ -137,7 +137,7 @@ void ComputerClub::handleLeave(const Event &event) {
         string client = queue.front();
         queue.pop();
         iTable->release(event.time, hourlyCost);
-        iTable->take(client,event.time);
+        iTable->take(client, event.time);
         generateEvent(event.time, EventType::QUEUE, client + " " + to_string(iTable->number));
     } else {
         iTable->release(event.time, hourlyCost);
