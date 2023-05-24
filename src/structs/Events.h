@@ -4,7 +4,7 @@
 #include <string>
 #include <ostream>
 #include "../enums/EventType.h"
-#include "Time.h"
+#include "../Time/Time.h"
 
 using namespace std;
 
@@ -23,7 +23,7 @@ struct EventBody {
 };
 
 struct Event {
-    Time time{};
+    Time time;
     EventType type = EventType::NONE;
     EventBody body;
 

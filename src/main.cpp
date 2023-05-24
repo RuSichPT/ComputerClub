@@ -11,6 +11,7 @@ int main(int argc, char *argv[]) {
         try {
             ComputerClub club("../" + filename);
             club.open();
+            club.close();
         } catch (const exception &e) {
             cerr << e.what() << endl;
         }

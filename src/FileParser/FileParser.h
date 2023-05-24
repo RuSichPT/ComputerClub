@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <string>
-#include "../structs/Time.h"
 
 using namespace std;
 
@@ -17,7 +16,6 @@ public:
 
 private:
     vector<string> strings;
-
 };
 
 

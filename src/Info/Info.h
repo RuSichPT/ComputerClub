@@ -1,8 +1,7 @@
 #ifndef COMPUTERCLUB_INFO_H
 #define COMPUTERCLUB_INFO_H
 
-
-#include "../structs/Time.h"
+#include <memory>
 #include "../FileParser/FileParser.h"
 #include "../structs/Events.h"
 
@@ -21,14 +20,14 @@ public:
     int getHourCost() const;
 
 private:
-    Time start{};
-    Time end{};
+    Time start;
+    Time end;
     int numTables;
     vector<Event> events;
     int hourCost{};
     unique_ptr<FileParser> parser;
 
-    void getTimeFromStringVector(Time &time, const vector<string> &vector, int index);
+    void checkSequence(const Time &time, const string &str);
 };
 
 

@@ -15,8 +15,8 @@ void Table::release(const Time &end, int price) {
     client = "";
     Time difference = end - start;
     duration = duration + difference;
-    int hours = difference.hour;
-    if (difference.min > 0) {
+    int hours = difference.getHour();
+    if (difference.getMin() > 0) {
         hours++;
     }
     profit += price * hours;

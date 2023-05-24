@@ -13,12 +13,13 @@ Info::Info(const string &path) {
         } else {
             vector<string> splitStr;
             parser->split(item, ' ', splitStr);
+
             if (i == 1) {
-                getTimeFromStringVector(start, splitStr, 0);
-                getTimeFromStringVector(end, splitStr, 1);
+                start = Time(splitStr.at(0));
+                end = Time(splitStr.at(1));
             } else {
-                Time time{};
-                getTimeFromStringVector(time, splitStr, 0);
+                Time time = Time(splitStr.at(0));
+                checkSequence(time,splitStr.at(0));
                 auto type = static_cast<EventType>(stoi(splitStr.at(1)));
                 int numberTable = 0;
                 if (type == EventType::SIT) {
@@ -51,9 +52,11 @@ int Info::getHourCost() const {
     return hourCost;
 }
 
-void Info::getTimeFromStringVector(Time &time, const vector<string> &vector, int index) {
-    time.hour = stoi(vector.at(index).substr(0, 2));
-    time.min = stoi(vector.at(index).substr(3, 4));
+void Info::checkSequence(const Time &time, const string &str) {
+    static Time previousTime{};
+    if (time > previousTime) {
+        previousTime = time;
+    } else {
+        throw runtime_error(str);
+    }
 }
-
-

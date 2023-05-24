@@ -12,17 +12,6 @@ void ComputerClub::open() {
     cout << info.getStart() << endl;
 //    handler->handle(events);
     handleEvents();
-    for (auto &table: tables) {
-        if (table.isBusy()) {
-            generateEvent(info.getEnd(), EventType::END_DAY_OR_LEAVE, table.getClient());
-            table.release(info.getEnd(), info.getHourCost());
-        }
-    }
-    cout << info.getEnd() << endl;
-
-    for (auto &table: tables) {
-        cout << table << endl;
-    }
 }
 
 void ComputerClub::initTables(int numTables) {
@@ -112,5 +101,19 @@ void ComputerClub::handleLeave(const Event &event) {
         generateEvent(event.time, EventType::QUEUE, client + " " + to_string(iTable->getNumber()));
     } else {
         iTable->release(event.time, info.getHourCost());
+    }
+}
+
+void ComputerClub::close() {
+    for (auto &table: tables) {
+        if (table.isBusy()) {
+            generateEvent(info.getEnd(), EventType::END_DAY_OR_LEAVE, table.getClient());
+            table.release(info.getEnd(), info.getHourCost());
+        }
+    }
+    cout << info.getEnd() << endl;
+
+    for (auto &table: tables) {
+        cout << table << endl;
     }
 }

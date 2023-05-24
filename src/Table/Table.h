@@ -1,10 +1,9 @@
 #ifndef COMPUTERCLUB_TABLE_H
 #define COMPUTERCLUB_TABLE_H
 
-
 #include <string>
 #include <ostream>
-#include "../structs/Time.h"
+#include "../Time/Time.h"
 
 class Table {
 public:
@@ -32,8 +31,8 @@ private:
     int number;
     bool busy = false;
     string client;
-    Time start{};
-    Time duration{};
+    Time start;
+    Time duration;
     int profit = 0;
 };
 

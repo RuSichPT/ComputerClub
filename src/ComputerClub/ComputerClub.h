@@ -5,8 +5,8 @@
 #include <memory>
 #include <ctime>
 #include <queue>
-#include "../FileParser/FileParser.h"
 #include "../EventsHandler/EventsHandler.h"
+#include "../Time/Time.h"
 #include "../structs/Events.h"
 #include "../Table/Table.h"
 #include "../Info/Info.h"
@@ -18,6 +18,7 @@ public:
     explicit ComputerClub(const string &path);
 
     void open();
+    void close();
 
 private:
     Info info;
