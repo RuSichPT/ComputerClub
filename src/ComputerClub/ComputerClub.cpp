@@ -2,67 +2,38 @@
 #include <iostream>
 #include <algorithm>
 
-ComputerClub::ComputerClub(const string &path) {
-    parser = make_unique<FileParser>(path);
+ComputerClub::ComputerClub(const string &path)
+        : info(path) {
     handler = make_unique<EventsHandler>();
+    initTables(info.getNumTables());
 }
 
 void ComputerClub::open() {
-    const vector<string> &strings = parser->getStrings();
-
-    for (int i = 0; i < strings.size(); ++i) {
-        const string &item = strings.at(i);
-        if (i == 0) {
-            initTables(stoi(item));
-        } else if (i == 1) {
-            vector<string> allTime;
-            parser->split(item, ' ', allTime);
-            start.hour = stoi(allTime.at(0).substr(0, 2));
-            start.min = stoi(allTime.at(0).substr(3, 4));
-            end.hour = stoi(allTime.at(1).substr(0, 2));
-            end.min = stoi(allTime.at(1).substr(3, 4));
-        } else if (i == 2) {
-            hourlyCost = stoi(item);
-        } else {
-            vector<string> str;
-            parser->split(item, ' ', str);
-            Time time{};
-            time.hour = stoi(str.at(0).substr(0, 2));
-            time.min = stoi(str.at(0).substr(3, 4));
-            auto type = static_cast<EventType>(stoi(str.at(1)));
-            int numberTable = 0;
-            if (type == EventType::SIT) {
-                numberTable = stoi(str.at(3));
-            }
-            Event event{time, type, str.at(2), numberTable};
-            events.push_back(event);
-        }
-    }
-    cout << start << endl;
+    cout << info.getStart() << endl;
 //    handler->handle(events);
     handleEvents();
     for (auto &table: tables) {
-        if (table.isBusy) {
-            generateEvent(end, EventType::END_DAY_OR_LEAVE, table.client);
-            table.release(end, hourlyCost);
+        if (table.isBusy()) {
+            generateEvent(info.getEnd(), EventType::END_DAY_OR_LEAVE, table.getClient());
+            table.release(info.getEnd(), info.getHourCost());
         }
     }
-    cout << end << endl;
+    cout << info.getEnd() << endl;
 
     for (auto &table: tables) {
-        cout << table.number << ' ' << table.profit << ' ' << table.duration << endl;
+        cout << table << endl;
     }
 }
 
 void ComputerClub::initTables(int numTables) {
     for (int i = 0; i < numTables; ++i) {
-        Table table{i + 1};
+        Table table(i + 1);
         tables.push_back(table);
     }
 }
 
 void ComputerClub::handleEvents() {
-    for (auto &event: events) {
+    for (auto &event: info.getEvents()) {
         cout << event << endl;
 
         if (event.type == EventType::COME) {
@@ -83,7 +54,7 @@ void ComputerClub::generateEvent(const Time &time, EventType type, const string 
 }
 
 void ComputerClub::handleCome(const Event &event) {
-    if (event.time < start) {
+    if (event.time < info.getStart()) {
         generateEvent(event.time, EventType::ERROR, "NotOpenYet");
     } else if (find(capacity.begin(), capacity.end(), event.body.client) == capacity.end()) {
         capacity.push_back(event.body.client);
@@ -98,10 +69,10 @@ void ComputerClub::handleSit(const Event &event) {
         return;
     }
 
-    auto clientWantToSit = [&event](const Table &table) { return table.number == event.body.numberTable; };
+    auto clientWantToSit = [&event](const Table &table) { return table.getNumber() == event.body.numberTable; };
     auto iTable = find_if(tables.begin(), tables.end(), clientWantToSit);
 
-    if (iTable->isBusy) {
+    if (iTable->isBusy()) {
         generateEvent(event.time, EventType::ERROR, "PlaceIsBusy");
     } else {
         iTable->take(event.body.client, event.time);
@@ -120,7 +91,7 @@ void ComputerClub::handleWait(const Event &event) {
 }
 
 bool ComputerClub::hasFreeTables() {
-    auto isFree = [](const Table &table) { return !table.isBusy; };
+    auto isFree = [](const Table &table) { return !table.isBusy(); };
     return find_if(tables.begin(), tables.end(), isFree) != tables.end();
 }
 
@@ -130,16 +101,16 @@ void ComputerClub::handleLeave(const Event &event) {
         return;
     }
 
-    auto clientWantToLeave = [&event](const Table &table) { return table.client == event.body.client; };
+    auto clientWantToLeave = [&event](const Table &table) { return table.getClient() == event.body.client; };
     auto iTable = find_if(tables.begin(), tables.end(), clientWantToLeave);
 
     if (!queue.empty()) {
         string client = queue.front();
         queue.pop();
-        iTable->release(event.time, hourlyCost);
+        iTable->release(event.time, info.getHourCost());
         iTable->take(client, event.time);
-        generateEvent(event.time, EventType::QUEUE, client + " " + to_string(iTable->number));
+        generateEvent(event.time, EventType::QUEUE, client + " " + to_string(iTable->getNumber()));
     } else {
-        iTable->release(event.time, hourlyCost);
+        iTable->release(event.time, info.getHourCost());
     }
 }

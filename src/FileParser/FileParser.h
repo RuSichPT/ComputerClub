@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include "../structs/Time.h"
 
 using namespace std;
 
@@ -10,12 +11,13 @@ class FileParser {
 public:
     explicit FileParser(const string &path);
 
-    static void split(const string &str, char delim, vector<string> &out);
+    void split(const string &str, char delim, vector<string> &out);
 
     const vector<string> &getStrings() const;
 
 private:
     vector<string> strings;
+
 };
 
 

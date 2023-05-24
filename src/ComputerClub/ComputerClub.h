@@ -4,10 +4,12 @@
 #include <string>
 #include <memory>
 #include <ctime>
+#include <queue>
 #include "../FileParser/FileParser.h"
 #include "../EventsHandler/EventsHandler.h"
 #include "../structs/Events.h"
-#include "../structs/Table.h"
+#include "../Table/Table.h"
+#include "../Info/Info.h"
 
 using namespace std;
 
@@ -18,14 +20,10 @@ public:
     void open();
 
 private:
+    Info info;
     vector<Table> tables;
     vector<string> capacity;
     queue<string> queue;
-    int hourlyCost{};
-    Time start{};
-    Time end{};
-    vector<Event> events;
-    unique_ptr<FileParser> parser;
     unique_ptr<EventsHandler> handler;
 
     void initTables(int numTables);
