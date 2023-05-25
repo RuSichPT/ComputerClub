@@ -85,22 +85,27 @@ bool ComputerClub::hasFreeTables() {
 }
 
 void ComputerClub::handleLeave(const Event &event) {
-    if (find(capacity.begin(), capacity.end(), event.body.client) == capacity.end()) {
+    auto iCapacity = find(capacity.begin(), capacity.end(), event.body.client);
+    if (iCapacity == capacity.end()) {
         generateEvent(event.time, EventType::ERROR, "ClientUnknown");
         return;
+    } else {
+        capacity.erase(iCapacity);
     }
 
     auto clientWantToLeave = [&event](const Table &table) { return table.getClient() == event.body.client; };
     auto iTable = find_if(tables.begin(), tables.end(), clientWantToLeave);
 
-    if (!queue.empty()) {
-        string client = queue.front();
-        queue.pop();
-        iTable->release(event.time, info.getHourCost());
-        iTable->take(client, event.time);
-        generateEvent(event.time, EventType::QUEUE, client + " " + to_string(iTable->getNumber()));
-    } else {
-        iTable->release(event.time, info.getHourCost());
+    if (iTable != tables.end()) {
+        if (!queue.empty()) {
+            string client = queue.front();
+            queue.pop();
+            iTable->release(event.time, info.getHourCost());
+            iTable->take(client, event.time);
+            generateEvent(event.time, EventType::QUEUE, client + " " + to_string(iTable->getNumber()));
+        } else {
+            iTable->release(event.time, info.getHourCost());
+        }
     }
 }
 

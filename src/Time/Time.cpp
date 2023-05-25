@@ -1,10 +1,13 @@
 #include "Time.h"
 #include <iomanip>
+#include <regex>
 
 Time::Time(int hour, int min) : hour(hour), min(min) {}
 
 Time::Time(const string &time) {
-    if (time.size() != 5 || time.at(2) != ':') {
+    static const regex r("[0-9]{2}[:]{1}[0-9]{2}");
+    if (!regex_match(time,r))
+    {
         throw runtime_error(time);
     }
     hour = stoi(time.substr(0, 2));

@@ -19,11 +19,14 @@ Info::Info(const string &path) {
                 end = Time(splitStr.at(1));
             } else {
                 Time time = Time(splitStr.at(0));
-                checkSequence(time,splitStr.at(0));
+                checkSequence(time, item);
                 auto type = static_cast<EventType>(stoi(splitStr.at(1)));
                 int numberTable = 0;
                 if (type == EventType::SIT) {
                     numberTable = stoi(splitStr.at(3));
+                }
+                if (numberTable > numTables) {
+                    throw runtime_error(item);
                 }
                 Event event{time, type, splitStr.at(2), numberTable};
                 events.push_back(event);

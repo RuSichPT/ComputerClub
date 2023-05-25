@@ -16,6 +16,8 @@ public:
 
 private:
     vector<string> strings;
+
+    void checkFormat(const string &str, int numberOfLine);
 };
 
 
