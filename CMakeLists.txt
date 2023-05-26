@@ -32,5 +32,5 @@ add_executable(ComputerClub
         src/Event/EventLeave.h
         src/Application/Application.cpp
         src/Application/Application.h
-        src/Event/EventError.cpp
-        src/Event/EventError.h)
+        src/Exception/EventException.cpp
+        src/Exception/EventException.h)

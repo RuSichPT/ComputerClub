@@ -3,6 +3,7 @@
 #include "../Event/EventCome.h"
 #include "../Event/EventSit.h"
 #include "../Event/EventWait.h"
+#include "../Event/EventLeave.h"
 
 LoadedData::LoadedData(const string &path) {
     parser = make_unique<FileParser>(path);
@@ -22,7 +23,7 @@ LoadedData::LoadedData(const string &path) {
                 start = Time(splitStr.at(0));
                 end = Time(splitStr.at(1));
             } else {
-                if (!createEvent(splitStr)){
+                if (!createEvent(splitStr)) {
                     throw runtime_error(item);
                 };
             }
@@ -49,7 +50,7 @@ int LoadedData::getHourCost() const {
 bool LoadedData::createEvent(const vector<string> &splitStr) {
     static Time previousTime{};
     Time time = Time(splitStr.at(0));
-    if ((time < previousTime)){
+    if ((time < previousTime)) {
         return false;
     }
 
@@ -64,6 +65,10 @@ bool LoadedData::createEvent(const vector<string> &splitStr) {
         event = make_shared<EventSit>(time, client, tableNumber);
     } else if (type == EventType::WAIT) {
         event = make_shared<EventWait>(time, client);
+    } else if (type == EventType::LEAVE) {
+        event = make_shared<EventLeave>(time, client);
+    } else {
+        throw runtime_error("no event of this type");
     }
 
     events.push_back(event);

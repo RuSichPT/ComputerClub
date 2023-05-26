@@ -1,9 +1,10 @@
+#include <sstream>
 #include "Event.h"
 
-Event::Event(const Time &time, EventType type, const string &client) : time(time), type(type), client(client) {}
+Event::Event(const Time &time, EventType type, const string &body) : time(time), type(type), body(body) {}
 
 ostream &operator<<(ostream &os, const Event &event) {
-    os << event.time << " " << static_cast<int>(event.type)<< " " << event.client;
+    os << event.toString();
     return os;
 }
 
@@ -15,7 +16,13 @@ EventType Event::getType() const {
     return type;
 }
 
-const string &Event::getClient() const {
-    return client;
+const string &Event::getBody() const {
+    return body;
+}
+
+string Event::toString() const {
+    ostringstream os;
+    os << time << " " << static_cast<int>(type) << " " << body;
+    return os.str();
 }
 

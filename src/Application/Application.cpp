@@ -9,6 +9,7 @@ Application::Application(const string &path) : data(path) {
 void Application::run() {
     cout << computerClub->getStart() << endl;
     eventHandler->handleEvents();
+    computerClub->endDay();
     cout << computerClub->getEnd() << endl;
     computerClub->printProfit();
 }

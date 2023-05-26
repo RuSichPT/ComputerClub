@@ -4,7 +4,7 @@
 
 #include "Event.h"
 
-class EventLeave : Event {
+class EventLeave : public Event {
 public:
     EventLeave(const Time &time, const string &client);
 

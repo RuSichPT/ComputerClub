@@ -8,22 +8,24 @@
 
 class Event {
 public:
-    Event(const Time &time, EventType type, const string &client);
-
-    friend ostream &operator<<(ostream &os, const Event &event);
+    Event(const Time &time, EventType type, const string &body);
 
     virtual void handle(shared_ptr<ComputerClub> &club) = 0;
+
+    virtual string toString() const;
 
     const Time &getTime() const;
 
     EventType getType() const;
 
-    const string &getClient() const;
+    const string &getBody() const;
+
+    friend ostream &operator<<(ostream &os, const Event &event);
 
 private:
     Time time;
     EventType type = EventType::NONE;
-    string client;
+    string body;
 };
 
 

@@ -1,16 +1,16 @@
 #include "EventCome.h"
-#include "EventError.h"
+#include "../Exception/EventException.h"
 
-EventCome::EventCome(const Time &time, const string &client) : Event(time, EventType::COME, client) {}
+EventCome::EventCome(const Time &time, const string &body) : Event(time, EventType::COME, body) {}
 
 void EventCome::handle(shared_ptr<ComputerClub> &club) {
     if (getTime() < club->getStart()) {
-        throw EventError(getTime(),"NotOpenYet");
+        throw EventException(EventType::ERROR, "NotOpenYet");
     }
 
-    if (!club->hasClient(getClient())) {
-        club->add(getClient());
+    if (!club->hasClient(getBody())) {
+        club->add(getBody());
     } else {
-        throw runtime_error("YouShallNotPass");
+        throw EventException(EventType::ERROR, "YouShallNotPass");
     }
 }

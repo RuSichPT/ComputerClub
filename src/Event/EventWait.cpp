@@ -1,12 +1,13 @@
 #include "EventWait.h"
+#include "../Exception/EventException.h"
 
 EventWait::EventWait(const Time &time, const string &client)
         : Event(time, EventType::WAIT, client) {}
 
 void EventWait::handle(shared_ptr<ComputerClub> &club) {
     if (club->hasFreeTables()) {
-        throw runtime_error("ICanWaitNoLonger");
+        throw EventException(EventType::ERROR, "ICanWaitNoLonger");
     }
 
-    club->takeQueue(getClient(), getTime());
+    club->takeQueue(getBody(), getTime());
 }
