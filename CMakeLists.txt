@@ -11,13 +11,26 @@ add_executable(ComputerClub
         src/FileParser/FileParser.h
         src/ComputerClub/ComputerClub.cpp
         src/ComputerClub/ComputerClub.h
-        src/EventsHandler/EventsHandler.cpp
-        src/EventsHandler/EventsHandler.h
-        src/structs/Events.h
+        src/EventHandler/EventHandler.cpp
+        src/EventHandler/EventHandler.h
         src/Enums/EventType.h
-        src/Info/Info.cpp
-        src/Info/Info.h
+        src/LoadedData/LoadedData.cpp
+        src/LoadedData/LoadedData.h
         src/Table/Table.cpp
         src/Table/Table.h
         src/Time/Time.cpp
-        src/Time/Time.h)
+        src/Time/Time.h
+        src/Event/Event.cpp
+        src/Event/Event.h
+        src/Event/EventCome.cpp
+        src/Event/EventCome.h
+        src/Event/EventSit.cpp
+        src/Event/EventSit.h
+        src/Event/EventWait.cpp
+        src/Event/EventWait.h
+        src/Event/EventLeave.cpp
+        src/Event/EventLeave.h
+        src/Application/Application.cpp
+        src/Application/Application.h
+        src/Event/EventError.cpp
+        src/Event/EventError.h)

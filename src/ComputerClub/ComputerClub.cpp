@@ -1,124 +1,108 @@
 #include "ComputerClub.h"
-#include <iostream>
 #include <algorithm>
+#include <iostream>
+#include "../Enums/EventType.h"
+#include "../Event/EventError.h"
 
-ComputerClub::ComputerClub(const string &path)
-        : info(path) {
-    handler = make_unique<EventsHandler>();
-    initTables(info.getNumTables());
+ComputerClub::ComputerClub(const Time &start, const Time &anEnd, int numTables, int hourCost)
+        : start(start), end(anEnd), numTables(numTables), hourCost(hourCost) {
+    initTables();
 }
 
-void ComputerClub::open() {
-    cout << info.getStart() << endl;
-//    handler->handle(events);
-    handleEvents();
+const Time &ComputerClub::getStart() const {
+    return start;
 }
 
-void ComputerClub::initTables(int numTables) {
+const Time &ComputerClub::getEnd() const {
+    return end;
+}
+
+void ComputerClub::add(const string &client) {
+    capacity.push_back(client);
+}
+
+void ComputerClub::remove(const string &client) {
+    auto iCapacity = find(capacity.begin(), capacity.end(), client);
+    if (iCapacity == capacity.end()) {
+        throw runtime_error("ClientUnknown");
+    } else {
+        capacity.erase(iCapacity);
+    }
+}
+
+bool ComputerClub::hasClient(const string &client) const {
+    return find(capacity.begin(), capacity.end(), client) != capacity.end();
+}
+
+void ComputerClub::takeTable(const string &client, const Time &start, int tableNumber) {
+    if (tableNumber > numTables) {
+        throw runtime_error("table number must not exceed the number of tables");
+    }
+
+    auto isTableNumber = [&tableNumber](const Table &table) { return table.getNumber() == tableNumber; };
+    auto iTable = find_if(tables.begin(), tables.end(), isTableNumber);
+
+    if (iTable != tables.end()) {
+        if (iTable->isBusy()) {
+            throw runtime_error("PlaceIsBusy");
+        } else {
+            iTable->take(client, start);
+        }
+    }
+}
+
+bool ComputerClub::hasFreeTables() const {
+    auto isFree = [](const Table &table) { return !table.isBusy(); };
+    return find_if(tables.begin(), tables.end(), isFree) != tables.end();
+}
+
+void ComputerClub::takeQueue(const string &client, const Time &start) {
+    if (queue.size() > tables.size()) {
+        throw runtime_error("");
+//        generateEvent(event.time, EventType::END_DAY_OR_LEAVE, "");
+    } else {
+        queue.push(client);
+    }
+}
+
+void ComputerClub::releaseTable(const string &client, const Time &end) {
+
+    auto isClient = [&client](const Table &table) { return table.getClient() == client; };
+    auto iTable = find_if(tables.begin(), tables.end(), isClient);
+
+//    if (iTable != tables.end()) {
+//        if (!queue.empty()) {
+//            string clientFromQueue = queue.front();
+//            queue.pop();
+//            iTable->release(end, hourCost);
+//            iTable->take(clientFromQueue, end);
+//            throw
+//                    generateEvent(event.time, EventType::QUEUE, client + " " + to_string(iTable->getNumber()));
+//        } else {
+//            iTable->release(event.time, info.getHourCost());
+//        }
+//    }
+}
+
+void ComputerClub::initTables() {
     for (int i = 0; i < numTables; ++i) {
         Table table(i + 1);
         tables.push_back(table);
     }
 }
 
-void ComputerClub::handleEvents() {
-    for (auto &event: info.getEvents()) {
-        cout << event << endl;
-
-        if (event.type == EventType::COME) {
-            handleCome(event);
-        } else if (event.type == EventType::SIT) {
-            handleSit(event);
-        } else if (event.type == EventType::WAIT) {
-            handleWait(event);
-        } else if (event.type == EventType::LEAVE) {
-            handleLeave(event);
-        }
-    }
-}
-
-void ComputerClub::generateEvent(const Time &time, EventType type, const string &body) {
-    Event error{time, type, body};
-    cout << error << endl;
-}
-
-void ComputerClub::handleCome(const Event &event) {
-    if (event.time < info.getStart()) {
-        generateEvent(event.time, EventType::ERROR, "NotOpenYet");
-    } else if (find(capacity.begin(), capacity.end(), event.body.client) == capacity.end()) {
-        capacity.push_back(event.body.client);
-    } else {
-        generateEvent(event.time, EventType::ERROR, "YouShallNotPass");
-    }
-}
-
-void ComputerClub::handleSit(const Event &event) {
-    if (find(capacity.begin(), capacity.end(), event.body.client) == capacity.end()) {
-        generateEvent(event.time, EventType::ERROR, "ClientUnknown");
-        return;
-    }
-
-    auto clientWantToSit = [&event](const Table &table) { return table.getNumber() == event.body.numberTable; };
-    auto iTable = find_if(tables.begin(), tables.end(), clientWantToSit);
-
-    if (iTable->isBusy()) {
-        generateEvent(event.time, EventType::ERROR, "PlaceIsBusy");
-    } else {
-        iTable->take(event.body.client, event.time);
-    }
-
-}
-
-void ComputerClub::handleWait(const Event &event) {
-    if (hasFreeTables()) {
-        generateEvent(event.time, EventType::ERROR, "ICanWaitNoLonger!");
-    } else if (queue.size() > tables.size()) {
-        generateEvent(event.time, EventType::END_DAY_OR_LEAVE, "");
-    } else {
-        queue.push(event.body.client);
-    }
-}
-
-bool ComputerClub::hasFreeTables() {
-    auto isFree = [](const Table &table) { return !table.isBusy(); };
-    return find_if(tables.begin(), tables.end(), isFree) != tables.end();
-}
-
-void ComputerClub::handleLeave(const Event &event) {
-    auto iCapacity = find(capacity.begin(), capacity.end(), event.body.client);
-    if (iCapacity == capacity.end()) {
-        generateEvent(event.time, EventType::ERROR, "ClientUnknown");
-        return;
-    } else {
-        capacity.erase(iCapacity);
-    }
-
-    auto clientWantToLeave = [&event](const Table &table) { return table.getClient() == event.body.client; };
-    auto iTable = find_if(tables.begin(), tables.end(), clientWantToLeave);
-
-    if (iTable != tables.end()) {
-        if (!queue.empty()) {
-            string client = queue.front();
-            queue.pop();
-            iTable->release(event.time, info.getHourCost());
-            iTable->take(client, event.time);
-            generateEvent(event.time, EventType::QUEUE, client + " " + to_string(iTable->getNumber()));
-        } else {
-            iTable->release(event.time, info.getHourCost());
-        }
-    }
-}
-
-void ComputerClub::close() {
-    for (auto &table: tables) {
-        if (table.isBusy()) {
-            generateEvent(info.getEnd(), EventType::END_DAY_OR_LEAVE, table.getClient());
-            table.release(info.getEnd(), info.getHourCost());
-        }
-    }
-    cout << info.getEnd() << endl;
-
+void ComputerClub::printProfit() {
     for (auto &table: tables) {
         cout << table << endl;
+    }
+}
+
+void ComputerClub::endDay() {
+    for (auto &table: tables) {
+        if (table.isBusy()) {
+//            cout << EventError(end,) <<
+//            generateEvent(end, EventType::END_DAY_OR_LEAVE, table.getClient());
+            table.release(end, hourCost);
+        }
     }
 }

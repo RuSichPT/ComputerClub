@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
-#include "ComputerClub/ComputerClub.h"
+#include "Application/Application.h"
+
 
 using namespace std;
 
@@ -9,9 +10,8 @@ int main(int argc, char *argv[]) {
     if (argc >= 2) {
         string filename = argv[1];
         try {
-            ComputerClub club("../" + filename);
-            club.open();
-            club.close();
+            Application app("../" + filename);
+            app.run();
         } catch (const exception &e) {
             cerr << e.what() << endl;
         }
