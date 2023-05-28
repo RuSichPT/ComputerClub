@@ -52,6 +52,8 @@ bool LoadedData::createEvent(const vector<string> &splitStr) {
     Time time = Time(splitStr.at(0));
     if ((time < previousTime)) {
         return false;
+    } else {
+        previousTime = time;
     }
 
     auto type = static_cast<EventType>(stoi(splitStr.at(1)));
@@ -62,6 +64,9 @@ bool LoadedData::createEvent(const vector<string> &splitStr) {
         event = make_shared<EventCome>(time, client);
     } else if (type == EventType::SIT) {
         int tableNumber = stoi(splitStr.at(3));
+        if ((tableNumber > numTables)) {
+            return false;
+        }
         event = make_shared<EventSit>(time, client, tableNumber);
     } else if (type == EventType::WAIT) {
         event = make_shared<EventWait>(time, client);
