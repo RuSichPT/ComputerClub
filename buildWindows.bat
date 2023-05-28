@@ -1,5 +1,5 @@
 mkdir build
 cd build
-cmake .. -G "Ninja"
+cmake .. -G "MinGW Makefiles"
 cmake --build . --config Release
 pause
