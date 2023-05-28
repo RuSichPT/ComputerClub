@@ -11,7 +11,7 @@ public:
 
     EventType getType() const;
 
-    const char *what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_NOTHROW override;
+    const char *what() const noexcept override;
 
 private:
     EventType type = EventType::ERROR;
