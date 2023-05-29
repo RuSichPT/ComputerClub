@@ -29,6 +29,10 @@ public:
 
     int getMin() const;
 
+    bool operator==(const Time &rhs) const;
+
+    bool operator!=(const Time &rhs) const;
+
 private:
     int hour;
     int min;

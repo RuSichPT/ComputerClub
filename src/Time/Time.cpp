@@ -56,6 +56,15 @@ ostream &operator<<(ostream &os, const Time &time) {
     return os;
 }
 
+bool Time::operator==(const Time &rhs) const {
+    return hour == rhs.hour &&
+           min == rhs.min;
+}
+
+bool Time::operator!=(const Time &rhs) const {
+    return !(rhs == *this);
+}
+
 int Time::getHour() const {
     return hour;
 }
