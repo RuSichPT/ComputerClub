@@ -74,7 +74,7 @@ void ComputerClub::releaseTable(const string &client, const Time &end) {
             queue.pop();
             iTable->release(end, hourCost);
             iTable->take(clientFromQueue, end);
-            throw EventException(EventType::QUEUE, client + " " + to_string(iTable->getNumber()));
+            throw EventException(EventType::QUEUE, clientFromQueue + " " + to_string(iTable->getNumber()));
         } else {
             iTable->release(end, hourCost);
         }
